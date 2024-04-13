@@ -2,25 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[CreateAssetMenu]
 public class SoldierScriptableObject : ScriptableObject
 {
-    [SerializeField] float startingHealth;
-    [SerializeField] float speed;
+    [SerializeField] public float _startingHealth;
+    [SerializeField] public float _baseSpeed;
 
-
-
-
-
-
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

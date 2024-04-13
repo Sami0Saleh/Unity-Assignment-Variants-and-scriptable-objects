@@ -7,6 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class SoldierScript : MonoBehaviour
 {
+    [SerializeField] SoldierScriptableObject _soldierSO;
     [SerializeField] NavMeshAgent _agent;
     [SerializeField] Animator _animator;
     [SerializeField] Transform _target;
@@ -33,9 +34,16 @@ public class SoldierScript : MonoBehaviour
     public bool _playerIsInMySight = false;
     public bool _playerInAttackRange = false;
 
+    private float _health;
+    private float _speed;
+
     void Start()
     {
         _agent.destination = Vector3.zero;
+        _health = _soldierSO._startingHealth;
+        _speed = _soldierSO._baseSpeed;
+        
+        _agent.speed = _speed;
     }
 
     void Update()
