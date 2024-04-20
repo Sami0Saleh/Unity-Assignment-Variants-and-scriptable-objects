@@ -27,12 +27,14 @@ public class SoldierScript : MonoBehaviour
 
     private Vector3 DistanceToWalkPoint;
     private bool _goingToTA = true;
+    public int deathCount;
 
     private float TimeBetweenAttacks = 0.5f;
     private bool AttackAlready;
 
     public bool _playerIsInMySight = false;
     public bool _playerInAttackRange = false;
+    public bool dead;
 
     private float _health;
     private float _speed;
@@ -61,9 +63,13 @@ public class SoldierScript : MonoBehaviour
     {
         //Check for Sight and Attack Range
         //_playerIsInMySight = Physics.CheckSphere(transform.position, SightRange, _TargetMask);
-       // _playerInAttackRange = Physics.CheckSphere(transform.position, AttackRange, _TargetMask);
+        // _playerInAttackRange = Physics.CheckSphere(transform.position, AttackRange, _TargetMask);
 
         Debug.Log($"insight = {_playerIsInMySight}, Attack Range = {_playerInAttackRange}");
+        if (_health <= 0 || dead == true)
+        {
+            Death();
+        }
         if (!_playerIsInMySight && !_playerInAttackRange)
         {
             Patroling();
@@ -126,16 +132,31 @@ public class SoldierScript : MonoBehaviour
         AttackAlready = false;
     }
 
-    private void DestroySpitter()
-    {
-        Destroy(gameObject);
-    }
-
     private void OnDrawGizmos() // SHOULD BE REMOVED
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, AttackRange);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, SightRange);
+    }
+
+    private void TakeDamage()
+    {
+        _health -= 25;
+    }
+
+    private void Death()
+    {
+        deathCount++;
+        _health = _soldierSO._startingHealth;
+        transform.position = _targetB.transform.position;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "bullet")
+        {
+            TakeDamage();
+        }
     }
 }

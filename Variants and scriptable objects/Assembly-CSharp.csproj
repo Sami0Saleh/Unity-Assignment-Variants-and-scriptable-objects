@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\scriptble Objects\SoldierScriptableObject.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Imported Assets\Sword\LongSword\Scripts\SimpleRotate.cs" />
+    <Compile Include="Assets\Scripts\SceneLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

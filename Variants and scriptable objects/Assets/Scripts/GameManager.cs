@@ -2,80 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    private AsyncOperation loadSceneAsyncOperation;
-    [SerializeField] GameObject WheelSprite;
-    [SerializeField] Slider slider;
-    [SerializeField] TextMeshProUGUI ButtonText;
-    [SerializeField] GameObject ReadyText;
+    [SerializeField] SoldierScript SoldierScriptA;
+    [SerializeField] SoldierScript SoldierScriptB;
+    [SerializeField] TextMeshProUGUI A_KD;
+    [SerializeField] TextMeshProUGUI B_KD;
 
-    public float _rotationSpeed = 10;
+    [SerializeField] Camera CameraA;
+    [SerializeField] Camera CameraB;
 
-    private bool userClickedOnSpin = false;
-    private bool userClickedOK = false;
-    private bool _canStartNextScene = false;
-    private int _framesToLoad;
+    private int _ADeathCount = 0;
+    private int _BDeathCount = 0;
 
-    private void Update()
+    private int _AKillCount = 0;
+    private int _BKillCount = 0;
+
+ 
+    // Update is called once per frame
+    void Update()
     {
-        if (userClickedOK)
-        {
-            SlowTheWheel();
+        _ADeathCount = SoldierScriptA.deathCount;
+        _BDeathCount = SoldierScriptB.deathCount;
+        _AKillCount = SoldierScriptB.deathCount;
+        _BKillCount = SoldierScriptA.deathCount;
+        A_KD.text = $"Veriant A  Kills {_AKillCount} Deaths {_ADeathCount}";
+        B_KD.text = $"Veriant B  Kills {_BKillCount} Deaths {_BDeathCount}";
+    }
 
-            if (_rotationSpeed > 0)
-            {   _rotationSpeed -= 0.001f;
-            Debug.Log(_rotationSpeed); }
-        else loadSceneAsyncOperation.allowSceneActivation = true; ;
-        }
-        else
+    public void SwitchCamera()
+    {
+        if(CameraA.isActiveAndEnabled == true)
         {
-            SpinTheWheel();
-            if (loadSceneAsyncOperation != null)
-            {
-                _rotationSpeed = loadSceneAsyncOperation.progress; Debug.Log(_rotationSpeed);
-                slider.value = loadSceneAsyncOperation.progress;
-            }
+            CameraA.gameObject.SetActive(false);
+            CameraB.gameObject.SetActive(true);
         }
-
-        if (_canStartNextScene && Input.anyKeyDown)
+        else if (CameraB.isActiveAndEnabled == true)
         {
-            userClickedOK = true;
-           
-            if (_rotationSpeed <= 0) { loadSceneAsyncOperation.allowSceneActivation = true; }
-            
+            CameraB.gameObject.SetActive(false);
+            CameraA.gameObject.SetActive(true);
         }
     }
-    public void LoadNextScene()
-    {
-        if (!userClickedOnSpin)
-        {
-            userClickedOnSpin = true;
-            loadSceneAsyncOperation = SceneManager.LoadSceneAsync("Scene B");
-            loadSceneAsyncOperation.allowSceneActivation = false;
-            StartCoroutine(LoadAsyncScene());
-        }
-    }
-
-    IEnumerator LoadAsyncScene()
-    {
-
-        yield return new WaitUntil(() => loadSceneAsyncOperation.progress >= 0.9f);
-        _canStartNextScene = true;
-        ReadyText.SetActive(true);
-        ButtonText.text = "Start Next Scene";
-    }
-
-    private void SpinTheWheel()
-    {
-        WheelSprite.transform.Rotate(0, 0, _rotationSpeed);
-    }
-
-    private void SlowTheWheel()
-    {
-        WheelSprite.transform.Rotate(0, 0, _rotationSpeed);
-    }
-    }
+}

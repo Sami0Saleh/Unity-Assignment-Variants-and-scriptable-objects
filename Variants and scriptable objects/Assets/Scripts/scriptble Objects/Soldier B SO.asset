@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e8e45824c3dd394c89d1685c66aec06, type: 3}
   m_Name: Soldier B SO
   m_EditorClassIdentifier: 
-  P_startingHealth: 100
+  _startingHealth: 125
   _baseSpeed: 2.5
