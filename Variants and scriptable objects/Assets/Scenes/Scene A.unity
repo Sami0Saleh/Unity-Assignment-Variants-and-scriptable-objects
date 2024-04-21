@@ -955,7 +955,6 @@ MonoBehaviour:
   slider: {fileID: 458506341}
   ButtonText: {fileID: 117189798}
   ReadyText: {fileID: 1648650347}
-  _rotationSpeed: 0
 --- !u!1 &1329301571
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class SoldierScript : MonoBehaviour
 {
+    // refrences 
     [SerializeField] SoldierScriptableObject _soldierSO;
     [SerializeField] NavMeshAgent _agent;
     [SerializeField] Animator _animator;
@@ -25,18 +26,20 @@ public class SoldierScript : MonoBehaviour
     [SerializeField] MeshRenderer _targetA;
     [SerializeField] MeshRenderer _targetB;
 
-    private Vector3 DistanceToWalkPoint;
-    private bool _goingToTA = true;
     public int deathCount;
 
-    private float TimeBetweenAttacks = 0.5f;
-    private bool AttackAlready;
+
+    private Vector3 _distanceToWalkPoint;
+    private bool _goingToTA = true;
+
+    private float _timeBetweenAttacks = 0.5f;
+    private bool _attackAlready;
 
     public bool _playerIsInMySight = false;
     public bool _playerInAttackRange = false;
-    public bool dead;
+    private bool _isDead;
 
-    private float _health;
+    public float _health;
     private float _speed;
 
     void Start()
@@ -62,14 +65,15 @@ public class SoldierScript : MonoBehaviour
     private void enemeyState()
     {
         //Check for Sight and Attack Range
-        //_playerIsInMySight = Physics.CheckSphere(transform.position, SightRange, _TargetMask);
-        // _playerInAttackRange = Physics.CheckSphere(transform.position, AttackRange, _TargetMask);
+         _playerIsInMySight = Physics.CheckSphere(transform.position, SightRange, _TargetMask);
+         _playerInAttackRange = Physics.CheckSphere(transform.position, AttackRange, _TargetMask);
 
         Debug.Log($"insight = {_playerIsInMySight}, Attack Range = {_playerInAttackRange}");
-        if (_health <= 0 || dead == true)
+        if (_health <= 0 || _isDead == true)
         {
             Death();
         }
+      
         if (!_playerIsInMySight && !_playerInAttackRange)
         {
             Patroling();
@@ -90,15 +94,15 @@ public class SoldierScript : MonoBehaviour
         if (_goingToTA)
         {
             _agent.SetDestination(_targetA.gameObject.transform.position);
-            DistanceToWalkPoint = transform.position - _targetA.gameObject.transform.position;
+            _distanceToWalkPoint = transform.position - _targetA.gameObject.transform.position;
         }
         else if (!_goingToTA)
         {
             _agent.SetDestination(_targetB.gameObject.transform.position);
-            DistanceToWalkPoint = transform.position - _targetB.gameObject.transform.position;
+            _distanceToWalkPoint = transform.position - _targetB.gameObject.transform.position;
         }
 
-        if (DistanceToWalkPoint.magnitude < 2f)
+        if (_distanceToWalkPoint.magnitude < 2f)
         {
             _goingToTA = !_goingToTA;
         }
@@ -118,18 +122,18 @@ public class SoldierScript : MonoBehaviour
 
         _agent.SetDestination(transform.position); transform.LookAt(_target);
 
-        if (!AttackAlready)
+        if (!_attackAlready)
         {
             Instantiate(_projectile, transform.position, transform.rotation);
 
-            AttackAlready = true;
-            Invoke(nameof(ResetAttack), TimeBetweenAttacks);
+            _attackAlready = true;
+            Invoke(nameof(ResetAttack), _timeBetweenAttacks);
         }
     }
 
     private void ResetAttack()
     {
-        AttackAlready = false;
+        _attackAlready = false;
     }
 
     private void OnDrawGizmos() // SHOULD BE REMOVED

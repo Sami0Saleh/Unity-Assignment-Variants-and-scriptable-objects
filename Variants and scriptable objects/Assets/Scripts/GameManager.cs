@@ -6,43 +6,50 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] SoldierScript SoldierScriptA;
-    [SerializeField] SoldierScript SoldierScriptB;
-    [SerializeField] TextMeshProUGUI A_KD;
-    [SerializeField] TextMeshProUGUI B_KD;
+    // soldiers refs
+    [SerializeField] private SoldierScript _soldierScriptA;
+    [SerializeField] private SoldierScript _soldierScriptB;
+    // KD Text
+    [SerializeField] private TextMeshProUGUI _text_A_KD;
+    [SerializeField] private TextMeshProUGUI _text_B_KD;
+    // cameras 
+    [SerializeField] private Camera _cameraA;
+    [SerializeField] private Camera _cameraB;
 
-    [SerializeField] Camera CameraA;
-    [SerializeField] Camera CameraB;
 
+    // private fields 
     private int _ADeathCount = 0;
     private int _BDeathCount = 0;
-
     private int _AKillCount = 0;
     private int _BKillCount = 0;
 
- 
-    // Update is called once per frame
-    void Update()
+     void Update()
     {
-        _ADeathCount = SoldierScriptA.deathCount;
-        _BDeathCount = SoldierScriptB.deathCount;
-        _AKillCount = SoldierScriptB.deathCount;
-        _BKillCount = SoldierScriptA.deathCount;
-        A_KD.text = $"Veriant A  Kills {_AKillCount} Deaths {_ADeathCount}";
-        B_KD.text = $"Veriant B  Kills {_BKillCount} Deaths {_BDeathCount}";
+        UpdateKD();
     }
 
+    private void UpdateKD()
+    {
+        _ADeathCount = _soldierScriptA.deathCount;
+        _BDeathCount = _soldierScriptB.deathCount;
+        _AKillCount = _soldierScriptB.deathCount;
+        _BKillCount = _soldierScriptA.deathCount;
+        _text_A_KD.text = $"Veriant A  Kills {_AKillCount} Deaths {_ADeathCount}";
+        _text_B_KD.text = $"Veriant B  Kills {_BKillCount} Deaths {_BDeathCount}";
+    }
+
+    // gets called by switch camera button
     public void SwitchCamera()
     {
-        if(CameraA.isActiveAndEnabled == true)
+        if(_cameraA.isActiveAndEnabled == true)
         {
-            CameraA.gameObject.SetActive(false);
-            CameraB.gameObject.SetActive(true);
+            _cameraA.gameObject.SetActive(false);
+            _cameraB.gameObject.SetActive(true);
         }
-        else if (CameraB.isActiveAndEnabled == true)
+        else if (_cameraB.isActiveAndEnabled == true)
         {
-            CameraB.gameObject.SetActive(false);
-            CameraA.gameObject.SetActive(true);
+            _cameraB.gameObject.SetActive(false);
+            _cameraA.gameObject.SetActive(true);
         }
     }
 }

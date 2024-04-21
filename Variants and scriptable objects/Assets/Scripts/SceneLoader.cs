@@ -13,47 +13,44 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] TextMeshProUGUI ButtonText;
     [SerializeField] GameObject ReadyText;
 
-    public float _rotationSpeed = 10;
+    private float _rotationSpeed = 10;
 
-    private bool userClickedOnSpin = false;
-    private bool userClickedOK = false;
+    private bool _userClickedOnSpin = false;
+    private bool _userClickedOK = false;
     private bool _canStartNextScene = false;
-    private int _framesToLoad;
-
     private void Update()
     {
-        if (userClickedOK)
+        if (_userClickedOK)
         {
             SlowTheWheel();
 
             if (_rotationSpeed > 0)
-            {   _rotationSpeed -= 0.001f;
-            Debug.Log(_rotationSpeed); }
-        else loadSceneAsyncOperation.allowSceneActivation = true; ;
+            {
+                _rotationSpeed -= 0.001f;
+            }
+            else loadSceneAsyncOperation.allowSceneActivation = true;
         }
-        else
+        else if (_userClickedOnSpin)
         {
             SpinTheWheel();
             if (loadSceneAsyncOperation != null)
             {
-                _rotationSpeed = loadSceneAsyncOperation.progress; Debug.Log(_rotationSpeed);
+                _rotationSpeed = loadSceneAsyncOperation.progress;
                 slider.value = loadSceneAsyncOperation.progress;
             }
         }
 
         if (_canStartNextScene && Input.anyKeyDown)
         {
-            userClickedOK = true;
-           
-            if (_rotationSpeed <= 0) { loadSceneAsyncOperation.allowSceneActivation = true; }
-            
+            _userClickedOK = true;
+            if (_rotationSpeed <= 0) { loadSceneAsyncOperation.allowSceneActivation = true; }   
         }
     }
     public void LoadNextScene()
     {
-        if (!userClickedOnSpin)
+        if (!_userClickedOnSpin)
         {
-            userClickedOnSpin = true;
+            _userClickedOnSpin = true;
             loadSceneAsyncOperation = SceneManager.LoadSceneAsync("Scene B");
             loadSceneAsyncOperation.allowSceneActivation = false;
             StartCoroutine(LoadAsyncScene());
@@ -62,7 +59,6 @@ public class SceneLoader : MonoBehaviour
 
     IEnumerator LoadAsyncScene()
     {
-
         yield return new WaitUntil(() => loadSceneAsyncOperation.progress >= 0.9f);
         _canStartNextScene = true;
         ReadyText.SetActive(true);
@@ -78,4 +74,5 @@ public class SceneLoader : MonoBehaviour
     {
         WheelSprite.transform.Rotate(0, 0, _rotationSpeed);
     }
-    }
+
+}
